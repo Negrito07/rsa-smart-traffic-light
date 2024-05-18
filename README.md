@@ -13,3 +13,7 @@ sudo apt install docker-ce docker-compose
 ```
 docker network create vanetzalan0 --subnet 192.168.98.0/24
 ```
+3. To start the Vanetza containers run:
+```
+docker-compose up
+```
