@@ -17,8 +17,6 @@ def on_message(client, obj, msg):
 
     obj = json.loads(message)
 
-    print('Object:' + obj)
-
 
 def generate():
     f = open('./in_cam.json')
@@ -31,7 +29,7 @@ def generate():
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
-client.connect("192.168.98.10", 1883, 60)
+client.connect("192.168.98.20", 1883, 60)
 
 threading.Thread(target=client.loop_forever).start()
 

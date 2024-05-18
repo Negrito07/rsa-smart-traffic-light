@@ -17,8 +17,6 @@ def on_message(client, obj, msg):
 
     obj = json.loads(message)
 
-    print('Object:' + obj)
-
 
 def generate():
     f = open('./in_spatem.json')
