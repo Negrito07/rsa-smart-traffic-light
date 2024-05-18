@@ -1,5 +1,5 @@
 # Smart Traffic Light
-Projeto para a disciplina de Redes e Sistemas Autônomos que consiste em desenvolver um sistema de gestão de tráfego inteligente que utiliza câmeras em tempo real, para identificação do tráfego de veículos e peões, e comunicação entre nós, através de uma rede veicular implementada sobre NAP-Vanetza.
+Projeto para a disciplina de Redes e Sistemas Autônomos que consiste em desenvolver um sistema de gestão de tráfego inteligente que utiliza câmeras em tempo real, para identificação do tráfego de veículos e peões, e comunicação entre nós, através de uma rede veicular implementada sobre [NAP-Vanetza](https://code.nap.av.it.pt/mobility-networks/vanetza).
 
 ## Setting up (Docker)
 1. Install docker and docker-compose
