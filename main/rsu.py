@@ -6,6 +6,7 @@ from time import sleep
 num_cars = 10
 num_pedestrians = 5
 
+
 def on_connect(client, obj, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("vanetza/out/spatem")
@@ -17,7 +18,7 @@ def on_message(client, obj, msg):
     print('Message: ' + message)
     obj = json.loads(message)
 
-    print('Object:' + obj)
+   
 
 
 def generate():
@@ -30,8 +31,8 @@ def generate():
     num_cars -= 1
     if num_cars < 0:
         num_cars = 10
-    
 
+    
     # Decidir a cor do semáforo
     light_state = decide_traffic_light(num_cars, num_pedestrians)
 
