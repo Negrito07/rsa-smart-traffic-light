@@ -1,3 +1,2 @@
 paho-mqtt==1.6.1
-geopy.point
-geopy.distance
+geopy
