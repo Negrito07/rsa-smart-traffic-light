@@ -8,17 +8,13 @@ num_pedestrians = 5
 
 def on_connect(client, obj, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("vanetza/out/spatem")
-    
+    client.subscribe("vanetza/out/cam")
 
 def on_message(client, obj, msg):
     message = msg.payload.decode('utf-8')
     print('Topic: ' + msg.topic)
     print('Message: ' + message)
     obj = json.loads(message)
-
-    print('Object:' + obj)
-
 
 def generate():
     # Carregar o modelo da mensagem SPAT do arquivo JSON
