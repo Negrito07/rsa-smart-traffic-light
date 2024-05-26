@@ -1,7 +1,27 @@
 <!doctype html>
-<title>Smart Traffic</title>
+<title>Smart Traffic Light</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <body>
-    <h1>Hello</h1>
+    <header>
+        <h1>Monitoramento</h1>
+    </header>
+    <div class="container">
+        <div class="full-content">
+            <h2>Detecção</h2>
+        </div>
+        <div class="full-content">
+            <h2>Resposta</h2>
+        </div>
+        <div>
+            <h2>Contagem</h2>
+        </div>
+        <div>
+            <h2>Controlo</h2>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 RSA. Semáforo Inteligente.</p>
+    </footer>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
