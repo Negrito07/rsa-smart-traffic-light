@@ -2,3 +2,5 @@
 .vscode
 # ignore conda
 .conda
+# ignore pycache
+*__pycache__
