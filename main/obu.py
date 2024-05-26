@@ -38,14 +38,6 @@ def on_message(client, obj, msg):
         else:
             print("No SPATEM data available in the message")
 
-def generate():
-    f = open('./in_spatem.json')
-    m = json.load(f)
-    m = json.dumps(m)
-    client.publish("vanetza/in/spatem", m)
-    f.close()
-    sleep(1)
-
 def calculate_bearing(pointA, pointB):
     lat1 = math.radians(pointA.latitude)
     lat2 = math.radians(pointB.latitude)
@@ -97,9 +89,9 @@ def simulate_movement(client, initial_coords, final_coords, stop_coords, duratio
         position_data = {
             "latitude": current_position.latitude,
             "longitude": current_position.longitude,
-            "velocity_kph": velocity_kph
+            "speed": velocity_kph
         }
-        client.publish("/in/coord", json.dumps(position_data))
+        client.publish("in/coord", json.dumps(position_data))
         
         # Update the previous position and time for the next calculation
         previous_position = current_position
@@ -133,8 +125,6 @@ update_interval = 1  # Interval to update the position in seconds
 # Start MQTT loop in a separate thread
 threading.Thread(target=client.loop_forever).start()
 
-# Start the movement simulation
-simulate_movement(client, initial_coords, final_coords, stop_coords, duration, update_interval)
-
 while True:
-    generate()
+    # Start the movement simulation
+    simulate_movement(client, initial_coords, final_coords, stop_coords, duration, update_interval)

@@ -12,11 +12,11 @@
 
     // rsu monitor msg callback
     socket.on('vanetza/in/spatem', function(msg) {
-        console.log(topic, msg);
+        console.log(msg);
     });
 
     // rsu monitor msg callback
-    socket.on('vanetza/in/cam', function(msg) {
-        console.log(topic, msg);
+    socket.on('in/coord', function(msg) {
+        console.log(msg);
     });
 </script>
