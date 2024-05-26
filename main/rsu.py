@@ -44,7 +44,7 @@ def generate():
 
 
 def decide_traffic_light(num_cars, num_pedestrians):
-    # Simular lógica de decisão
+    # Simular lógica de decisão, ainda ver se fica so assim ou nao...
     print(num_cars)
     if num_cars > num_pedestrians:
         return "GREEN"
