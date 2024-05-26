@@ -6,23 +6,33 @@
         <h1>Monitoramento</h1>
     </header>
     <div class="container">
-        <div class="full-content">
+        <div>
             <h2>Detecção</h2>
         </div>
-        <div class="full-content">
+        <div>
             <h2>Simulação</h2>
         </div>
         <div>
             <h2>Contagem</h2>
+            <div id="section-count">
+            </div>
         </div>
         <div>
             <h2>Controlo</h2>
+            <div id="section-control">
+                <div id="1" class="traffic-light">
+                    <div class="red active light"></div>
+                    <div class="yellow light"></div>
+                    <div class="green light"></div>
+                </div>
+            </div>
         </div>
     </div>
     <footer>
         <p>&copy; 2024 RSA. Semáforo Inteligente.</p>
     </footer>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
     var socket = io();
@@ -33,9 +43,39 @@
     // rsu monitor msg callback
     socket.on('vanetza/in/spatem', function(msg) {
         console.log(msg);
+
+        // Remove a classe 'active' de todas as luzes
+        $('.light').removeClass('active');
+
+        // Adiciona a classe 'active' à luz correspondente ao estado do semáforo
+        const setLight = (id, state) => {
+            console.log($('#section-control .red.light'))
+            switch(state) {
+                case 3:
+                    $('#section-control .red.light').addClass('active');
+                    break;
+                case 4:
+                    $('#section-control .yellow.light').addClass('active');
+                    break;
+                case 5:
+                    $('#section-control .green.light').addClass('active');
+                    break;
+                default:
+                    console.error('Estado inválido do semáforo:', state);
+            }
+        }
+
+        const { intersections } = JSON.parse(msg);
+        const intersection = intersections[0];
+
+        intersection.states.forEach((s) => {
+            const id = s.signalGroup;
+            const state = s["state-time-speed"][0].eventState;
+            setLight(id, state);
+        });
     });
 
-    // rsu monitor msg callback
+    // obu monitor msg callback
     socket.on('in/coord', function(msg) {
         console.log(msg);
     });
