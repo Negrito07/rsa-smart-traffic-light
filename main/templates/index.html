@@ -96,8 +96,15 @@ crossorigin=""/>
         const {
             latitude,
             longitude,
-            speed
+            speed,
+            compass
         } = JSON.parse(msg);
-        console.log(latitude, longitude, speed);
+        console.log(latitude, longitude, speed, compass);
+
+        var gps = L.Icon({
+            iconURL: 'arrow-gps.png',
+            iconSize: [40, 40],
+            iconAnchor: [0, 0]
+        })
     });
 </script>
