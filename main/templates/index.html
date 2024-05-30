@@ -41,6 +41,7 @@ crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
+<script src="{{ url_for('static', filename='leaflet.rotatedMarker.js') }}"></script>
 <script type="text/javascript" charset="utf-8">
     var socket = io();
     socket.on('connect', function(msg) {
@@ -48,12 +49,28 @@ crossorigin=""/>
     });
 
     // initialize map
-    var map = L.map('map').setView([40.630201, -8.653635], 17);
+    var map = L.map('map').setView([40.630201, -8.653635], 18);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+
+    // add traffic light marker
+    var trafficLightIcon = new L.divIcon({
+        html:  '<div id="1" class="traffic-light-icon">\
+                    <div class="red light-icon"></div>\
+                    <div class="yellow light-icon"></div>\
+                    <div class="green light-icon"></div>\
+                </div>'
+    });
+    L.marker([40.630366, -8.653866], {icon: trafficLightIcon}).addTo(map);
+
+    var carIcon = L.divIcon({className: 'gps-arrow'});
+
+    // initialize marker layer
+    var marker = new L.marker([0, 0], {icon: carIcon});
+    map.addLayer(marker);
 
     // rsu monitor msg callback
     socket.on('vanetza/in/spatem', function(msg) {
@@ -100,11 +117,12 @@ crossorigin=""/>
             compass
         } = JSON.parse(msg);
         console.log(latitude, longitude, speed, compass);
-
-        var gps = L.Icon({
-            iconURL: 'arrow-gps.png',
-            iconSize: [40, 40],
-            iconAnchor: [0, 0]
-        })
+        
+        map.removeLayer(marker);
+        marker = L.marker([latitude, longitude], { 
+            icon: carIcon,
+            rotationAngle: compass
+        });
+        map.addLayer(marker)
     });
 </script>
