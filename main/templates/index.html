@@ -1,6 +1,9 @@
 <!doctype html>
 <title>Smart Traffic Light</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
 <body>
     <header>
         <h1>Monitoramento</h1>
@@ -11,6 +14,7 @@
         </div>
         <div>
             <h2>Simulação</h2>
+            <div id="map"></div>
         </div>
         <div>
             <h2>Contagem</h2>
@@ -34,11 +38,22 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
 <script type="text/javascript" charset="utf-8">
     var socket = io();
     socket.on('connect', function(msg) {
         console.log(msg);
     });
+
+    // initialize map
+    var map = L.map('map').setView([40.630201, -8.653635], 17);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
     // rsu monitor msg callback
     socket.on('vanetza/in/spatem', function(msg) {
@@ -77,6 +92,12 @@
 
     // obu monitor msg callback
     socket.on('in/coord', function(msg) {
-        console.log(msg);
+        //console.log(msg);
+        const {
+            latitude,
+            longitude,
+            speed
+        } = JSON.parse(msg);
+        console.log(latitude, longitude, speed);
     });
 </script>
