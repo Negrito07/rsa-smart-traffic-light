@@ -153,12 +153,12 @@ crossorigin=""/>
 
     // rsu monitor msg callback (video)
     socket.on('in/frames', function(msg) {
-        console.log(msg);
         const {
             frame,
             width,
             height
         } = JSON.parse(msg);
+        console.log(width, height);
 
         // // Exemplo de array com dados da imagem (RGB)
         // let width = 100;  // Largura da imagem

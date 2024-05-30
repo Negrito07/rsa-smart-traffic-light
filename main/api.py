@@ -19,7 +19,7 @@ class Monitor:
         message = msg.payload.decode('utf-8')
         topic = msg.topic
         print('Topic: ' + msg.topic)
-        print('Message: ' + message)
+        # print('Message: ' + message)
         self.on_message(topic, message)
 
     def start(self):

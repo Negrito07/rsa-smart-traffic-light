@@ -17,7 +17,7 @@ def on_connect(client, obj, flags, rc):
 def on_message(client, obj, msg):
     message = msg.payload.decode('utf-8')
     print('Topic: ' + msg.topic)
-    print('Message: ' + message)
+    # print('Message: ' + message)
     obj = json.loads(message)
 
 def generate():
