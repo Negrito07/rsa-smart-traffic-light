@@ -112,6 +112,7 @@ def simulate_movement(client, initial_coords, final_coords, stop_coords, duratio
             "latitude": current_position.latitude,
             "longitude": current_position.longitude,
             "speed": velocity_kph
+            "compass": compass_bearing
         }
         client.publish("in/coord", json.dumps(position_data))
         
