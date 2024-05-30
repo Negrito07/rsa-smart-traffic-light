@@ -12,7 +12,8 @@ def root():
 # hosts/topics to listen
 monitors = [
     Monitor("192.168.98.10", "vanetza/in/spatem"),     # rsu
-    Monitor("192.168.98.20", "in/coord")               # obu
+    Monitor("192.168.98.20", "in/coord"),              # obu
+    Monitor("192.168.98.30", "in/coord")               # obu 2
 ]
 
 @socketio.on('connect')

@@ -66,11 +66,14 @@ crossorigin=""/>
     });
     L.marker([40.630366, -8.653866], {icon: trafficLightIcon}).addTo(map);
 
-    var carIcon = L.divIcon({className: 'gps-arrow'});
+    var car1Icon = L.divIcon({className: 'car1-arrow'});
+    var car2Icon = L.divIcon({className: 'car2-arrow'});
 
-    // initialize marker layer
-    var marker = new L.marker([0, 0], {icon: carIcon});
-    map.addLayer(marker);
+    // initialize car markers
+    var car1 = L.marker([0, 0], {icon: car1Icon});
+    var car2 = L.marker([0, 0], {icon: car2Icon});
+    map.addLayer(car1);
+    map.addLayer(car2);
 
     // rsu monitor msg callback
     socket.on('vanetza/in/spatem', function(msg) {
@@ -107,22 +110,40 @@ crossorigin=""/>
         });
     });
 
+    const updatePosition = (car, latitude, longitude, compass) => {
+        map.removeLayer(car);
+        let next = L.marker([latitude, longitude], { 
+            icon: carIcon,
+            rotationAngle: compass
+        });
+        map.addLayer(next);
+    };
+
     // obu monitor msg callback
     socket.on('in/coord', function(msg) {
         //console.log(msg);
         const {
+            id,
             latitude,
             longitude,
             speed,
             compass
         } = JSON.parse(msg);
-        console.log(latitude, longitude, speed, compass);
-        
-        map.removeLayer(marker);
-        marker = L.marker([latitude, longitude], { 
-            icon: carIcon,
-            rotationAngle: compass
-        });
-        map.addLayer(marker)
+        console.log(id, latitude, longitude, speed, compass);
+        if (id === 1) {
+            map.removeLayer(car1);
+            car1 = L.marker([latitude, longitude], { 
+                icon: car1Icon,
+                rotationAngle: compass
+            });
+            map.addLayer(car1);
+        } else if (id === 2) {
+            map.removeLayer(car2);
+            car2 = L.marker([latitude, longitude], { 
+                icon: car2Icon,
+                rotationAngle: compass
+            });
+            map.addLayer(car2);
+        }
     });
 </script>

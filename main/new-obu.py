@@ -109,10 +109,11 @@ def simulate_movement(client, initial_coords, final_coords, stop_coords, duratio
         
         # Publish the current position and velocity to the specified topic
         position_data = {
+            "id": 1,
             "latitude": current_position.latitude,
             "longitude": current_position.longitude,
-            "speed": velocity_kph
-            "compass": compass_bearing
+            "speed": velocity_kph,
+            "compass": bearing
         }
         client.publish("in/coord", json.dumps(position_data))
         
@@ -137,12 +138,12 @@ client.on_message = on_message
 client.connect("192.168.98.20", 1883, 60)
 
 # Define initial, stop, and final coordinates (latitude, longitude)
-initial_coords = (40.629994, -8.653797)  # Passadeira do ISCA 40m antes
-stop_coords = (40.630272896858486, -8.653951274842521)  # Simulacao do Semaforo na Passadeira ISCA
-final_coords = (40.630446, -8.654048)  # Rotunda do ISCA
+initial_coords = (40.629949, -8.653738)  # Passadeira do ISCA 40m antes
+stop_coords = (40.63029237139059, -8.653910964742241)  # Simulacao do Semaforo na Passadeira ISCA
+final_coords = (40.630477, -8.654005)  # Rotunda do ISCA
 
 # Simulation parameters
-duration = 20        # Total duration of the movement in seconds  (Variable to Decide the Speed of the OBU)
+duration = 25        # Total duration of the movement in seconds  (Variable to Decide the Speed of the OBU)
 update_interval = 1  # Interval to update the position in seconds
 
 # Start MQTT loop in a separate thread

@@ -125,9 +125,16 @@ footer {
     margin: 0.8px;
 }
 
-.gps-arrow {
+.car1-arrow {
     width: 100px;
     height: 100px;
-    background-color: #000; /* Cor da seta */
+    background-color: blueviolet; /* Cor da seta */
+    clip-path: polygon(50% 0%, 100% 80%, 75% 100%, 50% 80%, 25% 100%, 0% 80%);
+}
+
+.car2-arrow {
+    width: 100px;
+    height: 100px;
+    background-color: green; /* Cor da seta */
     clip-path: polygon(50% 0%, 100% 80%, 75% 100%, 50% 80%, 25% 100%, 0% 80%);
 }

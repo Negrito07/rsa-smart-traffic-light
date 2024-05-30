@@ -6,7 +6,7 @@ from time import sleep
 num_cars = 12
 num_pedestrians = 5
 green_light_duration = 20  # duration in seconds for green light
-light_state = "RED"
+light_state = "GREEN"
 countdown = green_light_duration
 lock = threading.Lock()
 
