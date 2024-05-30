@@ -60,5 +60,5 @@ threading.Thread(target=client.loop_forever).start()
 
 while True:
     generate()
-    sleep(2)
+    sleep(1)
     

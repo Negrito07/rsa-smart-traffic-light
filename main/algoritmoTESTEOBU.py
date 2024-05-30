@@ -7,15 +7,16 @@ from geopy.point import Point
 import math
 import time
 
-# Global variable to store the current traffic light state
+# Global variables to store the current traffic light state and countdown
 current_event_state = None
+current_min_end_time = None
 
 def on_connect(client, obj, flags, rc):
     print("Connected with result code " + str(rc))
     client.subscribe("vanetza/out/spatem")
 
 def on_message(client, obj, msg):
-    global current_event_state
+    global current_event_state, current_min_end_time
     message = msg.payload.decode('utf-8')
     
     spatem = json.loads(message)
@@ -29,15 +30,21 @@ def on_message(client, obj, msg):
                     for sts in state_time_speed_list:
                         event_state = sts.get("eventState")
                         current_event_state = event_state
+                        current_min_end_time = sts.get("timing", {}).get("minEndTime", None)
+                        
                         if event_state == 3:
                             print('RED')
                         elif event_state == 5:
                             print('GREEN')
                         else:
                             print('Unknown eventState:', event_state)
+                        
+                        if current_min_end_time is not None:
+                            print(f"Countdown: {current_min_end_time}")
         else:
             print("No SPATEM data available in the message")
 
+# Calculate direction
 def calculate_bearing(pointA, pointB):
     lat1 = math.radians(pointA.latitude)
     lat2 = math.radians(pointB.latitude)
@@ -54,7 +61,7 @@ def calculate_bearing(pointA, pointB):
     return compass_bearing
 
 def simulate_movement(client, initial_coords, final_coords, stop_coords, duration, update_interval=1):
-    global current_event_state
+    global current_event_state, current_min_end_time
 
     start_point = Point(initial_coords)
     end_point = Point(final_coords)
@@ -80,10 +87,25 @@ def simulate_movement(client, initial_coords, final_coords, stop_coords, duratio
         if time_diff > 0:
             velocity_mps = distance_diff / time_diff  # velocity in meters per second
             velocity_kph = velocity_mps * 3.6  # convert to kilometers per hour
+            velocity_kph = round(velocity_kph, 2)
         else:
             velocity_kph = 0
         
-        print(f"Current Position: {current_position.latitude}, {current_position.longitude}, Velocity: {velocity_kph} km/h")
+        # Calculate the distance to the traffic light
+        distance_to_traffic_light = round(geodesic(current_position, stop_point).meters, 2)
+        
+        # Adjust velocity based on traffic light state and timing
+        if current_event_state == 3:  # RED light
+            if current_min_end_time is not None:
+                remaining_time_to_green = current_min_end_time - (time.time() % 60)
+                if remaining_time_to_green > 0:
+                    required_velocity_mps = distance_to_traffic_light / remaining_time_to_green
+                    required_velocity_kph = required_velocity_mps * 3.6
+                    velocity_kph = round(required_velocity_kph, 2)
+                    print(f"Adjusting velocity to {velocity_kph} km/h to reach traffic light when it turns GREEN")
+        
+        # Print current position, velocity, and distance to traffic light
+        print(f"Current Position: {current_position.latitude}, {current_position.longitude}, Velocity: {velocity_kph} km/h, Distance to traffic light: {distance_to_traffic_light} m")
         
         # Publish the current position and velocity to the specified topic
         position_data = {
@@ -98,16 +120,16 @@ def simulate_movement(client, initial_coords, final_coords, stop_coords, duratio
         previous_time = current_time
 
         # Check if the current position is close to the stop coordinates
-        if geodesic(current_position, stop_point).meters < 1:  # within 1 meter of stop point
+        if distance_to_traffic_light < 1:  # within 1 meter of stop point
             print("Reached stop coordinates. Checking traffic light state...")
             while current_event_state != 5:  # Wait until the traffic light is green
-                print("Traffic light is RED. Waiting...")
+                print(f"Traffic light is RED. Remaining time: {current_min_end_time}. Waiting...")
                 sleep(1)
             print("Traffic light is GREEN. Proceeding...")
 
         sleep(update_interval)
 
-#MQTT
+# MQTT
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
@@ -119,7 +141,7 @@ stop_coords = (40.630272896858486, -8.653951274842521)  # Simulacao do Semaforo 
 final_coords = (40.630446, -8.654048)  # Rotunda do ISCA
 
 # Simulation parameters
-duration = 20        # Total duration of the movement in seconds  (Variavel para Decidir a VELOCIDADE da OBU)
+duration = 20        # Total duration of the movement in seconds  (Variable to Decide the Speed of the OBU)
 update_interval = 1  # Interval to update the position in seconds
 
 # Start MQTT loop in a separate thread
