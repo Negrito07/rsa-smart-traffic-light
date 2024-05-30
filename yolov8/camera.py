@@ -33,9 +33,14 @@ class Camera:
     for frame in self.generator:
       obj = {'frame': frame.tolist()}
       msg = json.dumps(obj)
-      client.publish(msg)
+      client.publish("in/frames", msg)
       sleep(self.period)
 
 
+def main():
+    camera = Camera("./poland-5fps.mp4")
+    camera.start()
+
+main()
 
         

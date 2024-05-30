@@ -121,8 +121,8 @@ def simulate_movement(client, initial_coords, final_coords, stop_coords, duratio
         previous_position = current_position
         previous_time = current_time
 
-        # Check if the current position is close to the stop coordinates
-        if distance_to_traffic_light < 1:  # within 1 meter of stop point
+        # Verifica se a posicao atual esta perto do semaforo
+        if distance_to_traffic_light < 1:  # A 1 meter do semaforo
             print("Reached stop coordinates. Checking traffic light state...")
             while current_event_state != 5:  # Wait until the traffic light is green
                 print(f"Traffic light is RED. Remaining time: {current_min_end_time}. Waiting...")
