@@ -31,7 +31,11 @@ class Camera:
     client.connect('192.168.98.10', 1883, 60)     # connect to the rsu broker
     threading.Thread(target=client.loop_forever).start()
     for frame in self.generator:
-      obj = {'frame': frame.tolist()}
+      obj = {
+        'frame': frame.tolist(),
+        'width': self.info.width,
+        'height': self.info.height
+      }
       msg = json.dumps(obj)
       client.publish("in/frames", msg)
       sleep(self.period)
