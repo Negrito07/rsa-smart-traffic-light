@@ -1,8 +1,11 @@
-import os 
+import json
+import os
 from ultralytics import YOLO
 import supervision as sv
 import numpy as np
 from typing import List,Tuple
+import paho.mqtt.client as mqtt
+import threading
 
 class Yolo:
     MODEL = "yolov8x.pt"
@@ -22,6 +25,7 @@ class Yolo:
     def __init__(self, info):
         self.model = YOLO(Yolo.MODEL)
         self.class_names_dict = self.model.model.names
+        self.frame_to_detect = None
         self.detections = None
         self.count = {"pessoas": 0, "veiculos":0}
         self.info = info
@@ -112,5 +116,39 @@ class Yolo:
             for polygon in polygons
         ]
 
-    
+    def handle_connect(self, client, obj, flags, rc):
+        print("Connected with result code "+str(rc))
+        client.subscribe('in/frames')
+
+    def handle_message(self, client, obj, msg):
+        message = msg.payload.decode('utf-8')
+        topic = msg.topic
+        print('Topic: ' + msg.topic)
+        # print('Message: ' + message)
+        obj = json.loads(message)
+        self.frame_to_detect = np.array(obj.frame)
+
+    def generate(self, client):
+        while True:
+            if self.frame_to_detect:
+                count = self.detect(self.frame_to_detect)
+                detection = self.draw(self.frame_to_detect)
+                obj = {
+                    'count': count,
+                    'detection': detection
+                }
+                msg = json.dumps(obj)
+                client.publish('in/detections', msg)
+
+    # Simulate camera live feed from source video (sending frames through mqqt) 
+    def start(self):
+        client = mqtt.Client()
+        client.on_connect = self.handle_connect
+        client.on_message = self.handle_message
+        client.connect('192.168.98.10', 1883, 60)     # connect to the rsu broker
+        threading.Thread(target=self.client.loop_forever).start()
+        self.generate(client)
+
+
+        
 
