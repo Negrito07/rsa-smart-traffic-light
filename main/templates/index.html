@@ -163,17 +163,17 @@ crossorigin=""/>
         // // Exemplo de array com dados da imagem (RGB)
         // let width = 100;  // Largura da imagem
         // let height = 100; // Altura da imagem
-        // let imageData = new Uint8Array(width * height * 3);  // Array de dados da imagem (RGB)
+        let imageData = new Uint8Array(width * height * 3);  // Array de dados da imagem (RGB)
 
-        // // Preencha o array com dados da imagem (exemplo: uma imagem com um gradiente simples)
-        // for (let i = 0; i < height; i++) {
-        //     for (let j = 0; j < width; j++) {
-        //         let index = (i * width + j) * 3;
-        //         imageData[index] = i % 256;         // Valor do canal R
-        //         imageData[index + 1] = j % 256;     // Valor do canal G
-        //         imageData[index + 2] = (i + j) % 256; // Valor do canal B
-        //     }
-        // }
+        // Preencha o array com dados da imagem (exemplo: uma imagem com um gradiente simples)
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                let index = (i * width + j) * 3;
+                imageData[index] = frame[index][0];         // Valor do canal R
+                imageData[index + 1] = frame[index][1];     // Valor do canal G
+                imageData[index + 2] = frame[index][2];     // Valor do canal B
+            }
+        }
 
         // Crie um cv.Mat a partir do array de dados
         let img = cv.matFromArray(height, width, cv.CV_8UC3, frame);
