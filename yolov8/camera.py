@@ -33,6 +33,7 @@ class Camera:
 
     time = 0
     for frame in self.generator:
+      print(frame)
       obj = {
         'frame': frame.tolist(),
         'width': self.info.width,

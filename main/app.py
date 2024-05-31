@@ -13,6 +13,7 @@ def root():
 monitors = [
     Monitor("192.168.98.10", "vanetza/in/spatem"),     # rsu (SPATEM)
     Monitor("192.168.98.10", "in/frames"),             # rsu (Camera)   
+    Monitor("192.168.98.10", "in/detections"),         # rsu (Yolo)
     Monitor("192.168.98.20", "in/coord"),              # obu
     Monitor("192.168.98.30", "in/coord")               # obu 2
 ]

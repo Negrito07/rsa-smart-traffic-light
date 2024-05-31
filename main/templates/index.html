@@ -160,20 +160,6 @@ crossorigin=""/>
         } = JSON.parse(msg);
         console.log(width, height);
 
-        // // Exemplo de array com dados da imagem (RGB)
-        // let width = 100;  // Largura da imagem
-        // let height = 100; // Altura da imagem
-        // let imageData = new Uint8Array(width * height * 3);  // Array de dados da imagem (RGB)
-
-        // // Preencha o array com dados da imagem (exemplo: uma imagem com um gradiente simples)
-        // for (let i = 0; i < height; i++) {
-        //     for (let j = 0; j < width; j++) {
-        //         let index = (i * width + j) * 3;
-        //         imageData[index] = frame[index][0];         // Valor do canal R
-        //         imageData[index + 1] = frame[index][1];     // Valor do canal G
-        //         imageData[index + 2] = frame[index()][2];     // Valor do canal B
-        //     }
-        // }
         let imageData = new Uint8Array(frame.flatMap((pixel)=>pixel.flatMap((channel) => channel)));
 
         // Crie um cv.Mat a partir do array de dados
@@ -185,5 +171,29 @@ crossorigin=""/>
         // Libere a memória utilizada pela imagem
         img.delete();
     });
-</script>
 
+    // rsu monitor msg callback (detections)
+    socket.on('in/detections', function(msg) {
+        const {
+            count,
+            detection,
+            width,
+            height
+        } = JSON.parse(msg);
+        console.log(width, height);
+
+        let imageData = new Uint8Array(detection.flatMap((pixel)=>pixel.flatMap((channel) => channel)));
+
+        // Crie um cv.Mat a partir do array de dados
+        let img = cv.matFromArray(height, width, cv.CV_8UC3, imageData);
+
+        // Exiba a imagem no canvas
+        cv.imshow('video', img);
+
+        // Libere a memória utilizada pela imagem
+        img.delete();
+
+        // update count
+        $('#section-count').text(JSON.stringify(count));
+    });
+</script>

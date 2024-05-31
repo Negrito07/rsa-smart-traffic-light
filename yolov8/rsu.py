@@ -5,7 +5,7 @@ from time import sleep
 import supervision as sv
 
 HOME = os.getcwd()
-SOURCE_VIDEO_PATH = f"{HOME}/WhatsApp Video 2024-05-24 at 19.20.04.mp4"
+SOURCE_VIDEO_PATH = f"{HOME}/poland-5fps.mp4"
 TARGET_VIDEO_PATH = f"{HOME}/vehicle-counting-result-with-counter.mp4"
 
 class RSU:
@@ -32,7 +32,6 @@ class RSU:
 
 
   def callback(self,frame,index):
-    if index%self.frame_interval==0:
-      count = self.yolo.detect(frame)
-      print(index/self.fps, count)
+    print(frame)
+    count = self.yolo.detect(frame)
     return self.yolo.draw(frame)
