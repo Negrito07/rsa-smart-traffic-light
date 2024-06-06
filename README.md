@@ -17,3 +17,7 @@ docker network create vanetzalan0 --subnet 192.168.98.0/24
 ```
 docker-compose up
 ```
+
+# Link para o vídeo da demo no Youtube:
+
+[DEMO da Gestão de Tráfego Inteligente assistida por Câmaras no âmbito da UC REDES SISTEMAS AUTÓNOMOS (youtube.com)](https://www.youtube.com/watch?v=th12s0R_-VI&ab_channel=NunoFerreira)
